@@ -135,7 +135,7 @@ module gfx {
     timer = null;
 
     modelView = M4.translation(new V3(0, 0, -6));
-    projection = makePerspective(45, 640.0 / 480.0, 0.1, 100.0);
+    projection = makePerspective(45, canvas.width / canvas.height, 0.1, 100.0);
     theta = new V3(0, 0, 0);
     pan = new V3(0, 0, 0);
     scale = 0;
