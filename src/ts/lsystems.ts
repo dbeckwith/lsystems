@@ -9,7 +9,8 @@ $(():void => {
     gfx.startDraw();
 
     var lsystem:lsystems.LSystem = new lsystems.LSystem();
-    lsystem.addRule('F', 'F-F+F+FF-F-F+F');
+    lsystem.addRule('X', 'X+YF+');
+    lsystem.addRule('Y', '-FX-Y');
 
     var $rules:JQuery = $('#rules');
     _.forEach(lsystem.rules, (replacement:string, symbol:string):void => {
@@ -18,7 +19,7 @@ $(():void => {
             .text(`${symbol} \\u2192 ${replacement}`));
     });
 
-    var lstrings:string[] = ['F-F-F-F'];
+    var lstrings:string[] = ['FX'];
     var strIndex:number = 0;
 
     function drawString(str:string):void {
