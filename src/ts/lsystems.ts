@@ -11,6 +11,13 @@ $(():void => {
     var lsystem:lsystems.LSystem = new lsystems.LSystem();
     lsystem.addRule('F', 'F-F+F+FF-F-F+F');
 
+    var $rules:JQuery = $('#rules');
+    _.forEach(lsystem.rules, (replacement:string, symbol:string):void => {
+      $rules
+        .append($('<li></li>')
+            .text(`${symbol} \\u2192 ${replacement}`));
+    });
+
     var lstrings:string[] = ['F-F-F-F'];
     var strIndex:number = 0;
 
@@ -39,6 +46,7 @@ $(():void => {
       }
       gfx.setPath(pts);
     }
+
     drawString(lstrings[strIndex]);
 
     document.addEventListener('keydown', function (event:KeyboardEvent):void {
