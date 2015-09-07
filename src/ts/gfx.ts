@@ -153,6 +153,7 @@ module gfx {
       // TODO: rotate X about current Y rotation
       // TODO: set limits for scaling and panning
       // TODO: try to prevent context menu when dragging off of canvas
+      // TODO: maybe switch right and left buttons?
       if (dragButton >= 0) {
         switch (dragButton) {
           case 0: // left
