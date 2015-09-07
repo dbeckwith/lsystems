@@ -32,8 +32,17 @@ module gfx {
 
     gl = null;
 
+    if (!window['WebGLRenderingContext']) {
+      return false;
+    }
+
     try {
-      gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      gl =
+        canvas.getContext('webgl') ||
+        canvas.getContext('experimental-webgl') ||
+        canvas.getContext('webkit-3d') ||
+        canvas.getContext('moz-webgl') ||
+        null;
     }
     catch (e) {
       alert('Error initializing WebGL: ' + e);
