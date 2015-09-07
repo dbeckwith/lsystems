@@ -53,10 +53,10 @@ module gfx {
       gl.viewport(0, 0, canvas.width, canvas.height);
     });
 
-    gl.clearColor(1.0, 1.0, 1.0, 1.0);  // Clear to black, fully opaque
-    gl.clearDepth(1.0);                 // Clear everything
-    gl.enable(gl.DEPTH_TEST);           // Enable depth testing
-    gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
+    gl.clearColor(0.9, 0.9, 0.9, 1.0);
+    gl.clearDepth(1.0); // Clear everything
+    gl.enable(gl.DEPTH_TEST); // Enable depth testing
+    gl.depthFunc(gl.LEQUAL); // Near things obscure far things
 
     anim =
       window['requestAnimationFrame'] ||
