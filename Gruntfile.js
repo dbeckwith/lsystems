@@ -60,6 +60,7 @@ module.exports = function (grunt) {
           sourceMap: true,
           sourceMapRootpath: '../..',
           sourceMapBasepath: '.',
+          sourceMapURL: 'index.css.map', // TODO: temporary fix for https://github.com/gruntjs/grunt-contrib-less/issues/236
           compress: false
         }
       },
