@@ -86,16 +86,17 @@ module gfx {
     public w:number;
 
     constructor(v3:V3, w:number);
-    constructor(x:number, y:number, z:number, w:number) {
-      if (x instanceof V3) {
+    constructor(x:number, y:number, z:number, w:number);
+    constructor(x:number|V3, y:number, z?:number, w?:number) {
+      if (typeof x === 'number') {
+        this.x = <number>x;
+        this.y = y;
+        this.z = z;
+      }
+      else {
         this.x = (<V3>x).x;
         this.y = (<V3>x).y;
         this.z = (<V3>x).z;
-      }
-      else {
-        this.x = x;
-        this.y = y;
-        this.z = z;
       }
       this.w = w;
     }
