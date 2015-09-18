@@ -26,7 +26,7 @@ module gfx {
       );
     }
 
-    static translation(d:V3):M4 {
+    static translation(d:V3|V4):M4 {
       return new M4(
         1, 0, 0, d.x,
         0, 1, 0, d.y,

@@ -23,8 +23,8 @@ module gfx {
   var pathLen:number;
   var modelView:M4;
   var projection:M4;
-  var theta:V3;
-  var pan:V3;
+  var theta:V4;
+  var pan:V4;
   var scale:number;
 
   export function init(c:HTMLCanvasElement):boolean {
@@ -145,8 +145,8 @@ module gfx {
 
     modelView = M4.translation(new V3(0, 0, -6));
     projection = makePerspective(45, canvas.width / canvas.height, 0.1, 100.0);
-    theta = new V3(0, 0, 0);
-    pan = new V3(0, 0, 0);
+    theta = new V4(0, 0, 0, 0);
+    pan = new V4(0, 0, 0, 1);
     scale = 0;
 
 
@@ -166,12 +166,12 @@ module gfx {
       if (dragButton >= 0) {
         switch (dragButton) {
           case 0: // left
-            theta.y += event['movementX'] / 100;
             theta.x += event['movementY'] / 100;
+            theta.y += event['movementX'] / 100;
             break;
           case 2: // right
             pan.x += event['movementX'] / 100;
-            pan.y -= event['movementY'] / 100;
+            pan.y += -event['movementY'] / 100;
             break;
           default:
             break;

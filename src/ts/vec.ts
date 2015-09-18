@@ -85,10 +85,18 @@ module gfx {
     public z:number;
     public w:number;
 
+    constructor(v3:V3, w:number);
     constructor(x:number, y:number, z:number, w:number) {
-      this.x = x;
-      this.y = y;
-      this.z = z;
+      if (x instanceof V3) {
+        this.x = (<V3>x).x;
+        this.y = (<V3>x).y;
+        this.z = (<V3>x).z;
+      }
+      else {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+      }
       this.w = w;
     }
 
@@ -112,6 +120,10 @@ module gfx {
 
     public toArray():number[] {
       return [this.x, this.y, this.z, this.w];
+    }
+
+    public toV3():V3 {
+      return new V3(this.x, this.y, this.z);
     }
 
     public copy():V4 {
