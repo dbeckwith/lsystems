@@ -6,21 +6,129 @@
 
 $(():void => {
   if (gfx.init(<HTMLCanvasElement>document.getElementById('canvas'))) {
-    gfx.startDraw();
+    var $editRulesModal:JQuery = $('#editRulesModal');
+    var $rulesEditList:JQuery = $('#rulesEditList');
+    var $startString:JQuery = $('#startString');
+    var $applyRulesButton:JQuery = $('#applyRulesButton');
+    var $rules:JQuery = $('#rulesList');
 
     var lsystem:lsystems.LSystem = new lsystems.LSystem();
     lsystem.addRule('X', 'X+YF+');
     lsystem.addRule('Y', '-FX-Y');
 
-    var $rules:JQuery = $('#rules');
-    _.forEach(lsystem.rules, (replacement:string, symbol:string):void => {
-      $rules
-        .append($('<li></li>')
-            .text(`${symbol} \\u2192 ${replacement}`));
-    });
-
     var lstrings:string[] = ['FX'];
     var strIndex:number = 0;
+
+    function writeRulesTable():void {
+      $rules.html('');
+      _.forEach(lsystem.rules, (replacement:string, symbol:string):void => {
+        $rules
+          .append($('<li></li>')
+            .text(`${symbol} \\u2192 ${replacement}`));
+      });
+    }
+
+    writeRulesTable();
+
+    $editRulesModal.modal({
+      show: false,
+      backdrop: true
+    });
+
+    function checkFormErrors():void {
+      var errors:boolean = $startString.val().length === 0;
+      $startString.toggleClass('error', errors);
+      $rulesEditList.children().find('.symbol-input').each(function ():void {
+        var error:boolean = $(this).val().length === 0;
+        if (!error) {
+          $rulesEditList.children().find('.symbol-input').each((i:number, e:Element):boolean => {
+            if (this !== e && $(this).val() === $(e).val()) {
+              error = true;
+            }
+            return !error;
+          });
+        }
+        $(this).toggleClass('error', error);
+        if (error) {
+          errors = true;
+        }
+      });
+      $applyRulesButton.toggleClass('disabled', errors);
+    }
+
+    $startString.change(function ():void {
+      checkFormErrors();
+    });
+
+    $('#editRulesButton').click(():void => {
+      $startString.val(lstrings[0]);
+      $startString.removeClass('error');
+
+      $rulesEditList.html('');
+      _.forEach(lsystem.rules, (replacement:string, symbol:string):void => {
+        $rulesEditList
+          .append($('<li></li>')
+            .append($('<input>')
+              .attr({
+                class: 'form-control symbol-input',
+                type: 'text'
+              })
+              .val(symbol)
+              .keypress(function (event:KeyboardEvent):boolean {
+                switch (event.which) {
+                  case 32: // space
+                  case 13: // enter
+                    break;
+                  default:
+                    $(this).val(String.fromCharCode(event.which));
+                    $(this).trigger('change');
+                    break;
+                }
+                return false;
+              })
+              .keydown(function (event:KeyboardEvent):boolean {
+                switch (event.which) {
+                  case 8: // backspace
+                  case 46: // delete
+                    $(this).val('');
+                    $(this).trigger('change');
+                    return false;
+                  default:
+                    return true;
+                }
+              })
+              .change(function ():void {
+                checkFormErrors();
+              }))
+            .append(' \u2192 ')
+            .append($('<input>')
+              .attr({
+                class: 'form-control replacement-input',
+                type: 'text'
+              })
+              .val(replacement)
+              .change(function ():void {
+                checkFormErrors();
+              })));
+      });
+      // TODO: buttons to remove rules
+      // TODO: button to add a rule
+
+      $editRulesModal.modal('show');
+    });
+    $applyRulesButton.click(():void => {
+      lsystem = new lsystems.LSystem();
+      $rulesEditList.children().each(function ():void {
+        lsystem.addRule($(this).find('.symbol-input').val(), $(this).find('.replacement-input').val());
+      });
+      lstrings = [$startString.val()];
+      strIndex = 0;
+      $editRulesModal.modal('hide');
+      writeRulesTable();
+      drawString(lstrings[strIndex]);
+    });
+
+    gfx.startDraw();
 
     function drawString(str:string):void {
       $('#currString').text(str);

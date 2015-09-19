@@ -5,13 +5,34 @@
   margin: 10pt auto;
 }
 
-#currString, #rules {
+#currString, #rulesList, #rulesEditList {
   .well;
+}
 
+#currString, #rulesList, #rulesEditList, #startString {
   padding: 5px 9px;
   overflow-x: auto;
   white-space: nowrap;
   font-family: monospace;
+}
+
+#editForm {
+  input[type="text"] {
+    height: @line-height-computed;
+    padding: 0 4px;
+
+    &.symbol-input {
+      width: 1em;
+      text-align: center;
+      padding: 0;
+    }
+
+    &.error {
+      @color: red;
+      border-color: @color;
+      background-color: hsl(hue(@color), saturation(@color), 90%);
+    }
+  }
 }
 
 .footer {
