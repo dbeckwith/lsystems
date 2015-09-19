@@ -166,16 +166,15 @@ module gfx {
       // TODO: rotate X about current Y rotation
       // TODO: set limits for scaling and panning
       // TODO: try to prevent context menu when dragging off of canvas
-      // TODO: maybe switch right and left buttons?
       if (dragButton >= 0) {
         switch (dragButton) {
           case 0: // left
-            theta.x += event['movementY'] / 100;
-            theta.y += event['movementX'] / 100;
-            break;
-          case 2: // right
             pan.x += event['movementX'] / 100;
             pan.y += -event['movementY'] / 100;
+            break;
+          case 2: // right
+            theta.x += event['movementY'] / 100;
+            theta.y += event['movementX'] / 100;
             break;
           default:
             break;
