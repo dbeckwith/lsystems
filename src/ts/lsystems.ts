@@ -57,8 +57,78 @@ $(():void => {
         $applyRulesButton.toggleClass('disabled', errors);
       }
 
+      function addRule(symbol:string, replacement:string):void {
+        var $rule:JQuery = $('<tr></tr>')
+          .append($('<td></td>')
+            .append($('<input>')
+              .attr({
+                class: 'form-control symbol-input',
+                type: 'text'
+              })
+              .val(symbol)
+              .keypress(function (event:KeyboardEvent):boolean {
+                switch (event.which) {
+                  case 32: // space
+                  case 13: // enter
+                    break;
+                  default:
+                    $(this).val(String.fromCharCode(event.which));
+                    $(this).trigger('change');
+                    break;
+                }
+                return false;
+              })
+              .keydown(function (event:KeyboardEvent):boolean {
+                switch (event.which) {
+                  case 8: // backspace
+                  case 46: // delete
+                    $(this).val('');
+                    $(this).trigger('change');
+                    return false;
+                  default:
+                    return true;
+                }
+              })
+              .change(function ():void {
+                checkFormErrors();
+              })))
+          .append($('<td></td>')
+            .text('\u2192'))
+          .append($('<td></td>')
+            .append($('<input>')
+              .attr({
+                class: 'form-control replacement-input',
+                type: 'text'
+              })
+              .val(replacement)
+              .change(function ():void {
+                checkFormErrors();
+              })))
+          .append($('<td></td>')
+            .append($('<button></button>')
+              .attr({
+                class: 'form-control btn btn-default btn-xs remove-rule-btn'
+              })
+              .append($('<span></span>')
+                .attr({
+                  class: 'glyphicon glyphicon-remove'
+                }))
+              .click(function ():boolean {
+                $rule.remove();
+                checkFormErrors();
+                return false;
+              })));
+        $rulesEditList.append($rule);
+      }
+
       $startString.change(function ():void {
         checkFormErrors();
+      });
+
+      $('#addRuleButton').click(function ():boolean {
+        addRule('', '');
+        checkFormErrors();
+        return false;
       });
 
       $('#editRulesButton').click(():void => {
@@ -67,56 +137,8 @@ $(():void => {
 
         $rulesEditList.html('');
         _.forEach(lsystem.rules, (replacement:string, symbol:string):void => {
-          $rulesEditList
-            .append($('<tr></tr>')
-              .append($('<td></td>')
-                .append($('<input>')
-                  .attr({
-                    class: 'form-control symbol-input',
-                    type: 'text'
-                  })
-                  .val(symbol)
-                  .keypress(function (event:KeyboardEvent):boolean {
-                    switch (event.which) {
-                      case 32: // space
-                      case 13: // enter
-                        break;
-                      default:
-                        $(this).val(String.fromCharCode(event.which));
-                        $(this).trigger('change');
-                        break;
-                    }
-                    return false;
-                  })
-                  .keydown(function (event:KeyboardEvent):boolean {
-                    switch (event.which) {
-                      case 8: // backspace
-                      case 46: // delete
-                        $(this).val('');
-                        $(this).trigger('change');
-                        return false;
-                      default:
-                        return true;
-                    }
-                  })
-                  .change(function ():void {
-                    checkFormErrors();
-                  })))
-              .append($('<td></td>')
-                .text(' \u2192 '))
-              .append($('<td></td>')
-                .append($('<input>')
-                  .attr({
-                    class: 'form-control replacement-input',
-                    type: 'text'
-                  })
-                  .val(replacement)
-                  .change(function ():void {
-                    checkFormErrors();
-                  }))));
+          addRule(symbol, replacement);
         });
-        // TODO: buttons to remove rules
-        // TODO: button to add a rule
 
         $editRulesModal.modal('show');
       });

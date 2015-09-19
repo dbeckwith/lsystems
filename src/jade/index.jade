@@ -38,6 +38,8 @@ html
                                 | Start string: #[input.form-control#startString(type="text")]
                                 table#rulesEditList
                                     tbody
+                                button.btn.btn-default.btn-xs#addRuleButton
+                                    +glyphicon("plus")
                         .modal-footer
                             button.btn.btn-default(data-dismiss="modal") Cancel
                             button.btn.btn-primary#applyRulesButton Apply
