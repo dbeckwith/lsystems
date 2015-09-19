@@ -7,7 +7,7 @@
 $(():void => {
   if (gfx.init(<HTMLCanvasElement>document.getElementById('canvas'))) {
     var $editRulesModal:JQuery = $('#editRulesModal');
-    var $rulesEditList:JQuery = $('#rulesEditList');
+    var $rulesEditList:JQuery = $('#rulesEditList').children('tbody');
     var $startString:JQuery = $('#startString');
     var $applyRulesButton:JQuery = $('#applyRulesButton');
     var $rules:JQuery = $('#rulesList');
@@ -68,49 +68,52 @@ $(():void => {
         $rulesEditList.html('');
         _.forEach(lsystem.rules, (replacement:string, symbol:string):void => {
           $rulesEditList
-            .append($('<li></li>')
-              .append($('<input>')
-                .attr({
-                  class: 'form-control symbol-input',
-                  type: 'text'
-                })
-                .val(symbol)
-                .keypress(function (event:KeyboardEvent):boolean {
-                  switch (event.which) {
-                    case 32: // space
-                    case 13: // enter
-                      break;
-                    default:
-                      $(this).val(String.fromCharCode(event.which));
-                      $(this).trigger('change');
-                      break;
-                  }
-                  return false;
-                })
-                .keydown(function (event:KeyboardEvent):boolean {
-                  switch (event.which) {
-                    case 8: // backspace
-                    case 46: // delete
-                      $(this).val('');
-                      $(this).trigger('change');
-                      return false;
-                    default:
-                      return true;
-                  }
-                })
-                .change(function ():void {
-                  checkFormErrors();
-                }))
-              .append(' \u2192 ')
-              .append($('<input>')
-                .attr({
-                  class: 'form-control replacement-input',
-                  type: 'text'
-                })
-                .val(replacement)
-                .change(function ():void {
-                  checkFormErrors();
-                })));
+            .append($('<tr></tr>')
+              .append($('<td></td>')
+                .append($('<input>')
+                  .attr({
+                    class: 'form-control symbol-input',
+                    type: 'text'
+                  })
+                  .val(symbol)
+                  .keypress(function (event:KeyboardEvent):boolean {
+                    switch (event.which) {
+                      case 32: // space
+                      case 13: // enter
+                        break;
+                      default:
+                        $(this).val(String.fromCharCode(event.which));
+                        $(this).trigger('change');
+                        break;
+                    }
+                    return false;
+                  })
+                  .keydown(function (event:KeyboardEvent):boolean {
+                    switch (event.which) {
+                      case 8: // backspace
+                      case 46: // delete
+                        $(this).val('');
+                        $(this).trigger('change');
+                        return false;
+                      default:
+                        return true;
+                    }
+                  })
+                  .change(function ():void {
+                    checkFormErrors();
+                  })))
+              .append($('<td></td>')
+                .text(' \u2192 '))
+              .append($('<td></td>')
+                .append($('<input>')
+                  .attr({
+                    class: 'form-control replacement-input',
+                    type: 'text'
+                  })
+                  .val(replacement)
+                  .change(function ():void {
+                    checkFormErrors();
+                  }))));
         });
         // TODO: buttons to remove rules
         // TODO: button to add a rule
@@ -130,14 +133,14 @@ $(():void => {
       });
     }
 
-    $('#prevStringButton').click(function():void {
+    $('#prevStringButton').click(function ():void {
       strIndex--;
       if (strIndex < 0) {
         strIndex = 0;
       }
       drawString(lstrings[strIndex]);
     });
-    $('#nextStringButton').click(function():void {
+    $('#nextStringButton').click(function ():void {
       strIndex++;
       while (!lstrings[strIndex]) {
         lstrings.push(lsystem.step(lstrings[lstrings.length - 1]));

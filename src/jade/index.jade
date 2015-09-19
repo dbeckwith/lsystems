@@ -36,7 +36,8 @@ html
                         .modal-body
                             form.form-inline#editForm
                                 | Start string: #[input.form-control#startString(type="text")]
-                                ul.list-unstyled#rulesEditList
+                                table#rulesEditList
+                                    tbody
                         .modal-footer
                             button.btn.btn-default(data-dismiss="modal") Cancel
                             button.btn.btn-primary#applyRulesButton Apply

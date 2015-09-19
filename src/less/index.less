@@ -5,11 +5,9 @@
   margin: 10pt auto;
 }
 
-#currString, #rulesList, #rulesEditList {
+#currString, #rulesList {
   .well;
-}
 
-#currString, #rulesList, #rulesEditList, #startString {
   padding: 5px 9px;
   overflow-x: auto;
   white-space: nowrap;
@@ -17,6 +15,26 @@
 }
 
 #editForm {
+  #startString {
+    font-family: monospace;
+  }
+
+  #rulesEditList {
+    font-family: monospace;
+    width: 100%;
+
+    tbody tr td {
+      &:nth-child(1) {
+        width: 1em;
+      }
+
+      &:nth-child(2) {
+        width: 2em;
+        text-align: center;
+      }
+    }
+  }
+
   input[type="text"] {
     height: @line-height-computed;
     padding: 0 4px;
@@ -25,6 +43,10 @@
       width: 1em;
       text-align: center;
       padding: 0;
+    }
+
+    &.replacement-input {
+      width: 100%;
     }
 
     &.error {
