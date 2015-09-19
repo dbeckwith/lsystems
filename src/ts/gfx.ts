@@ -20,7 +20,9 @@ module gfx {
   var dragButton:number;
 
   var nextPathVerts:number[];
-  var pathLen:number;
+  var useNextPathVerts:boolean;
+
+  var numVerts:number;
   var modelView:M4;
   var projection:M4;
   var theta:V4;
@@ -136,8 +138,10 @@ module gfx {
   function initBuffers():void {
     pathVerts = gl.createBuffer(); // create a buffer of vertex data
 
-    nextPathVerts = null;
-    pathLen = 0;
+    nextPathVerts = [];
+    useNextPathVerts = false;
+
+    numVerts = 0;
   }
 
   export function startDraw():void {
@@ -211,10 +215,11 @@ module gfx {
 
     // bind the buffer to the GPU as an array of values to be used with subsequent function calls
     gl.bindBuffer(gl.ARRAY_BUFFER, pathVerts);
-    if (nextPathVerts) {
-      pathLen = nextPathVerts.length / 3;
+    if (useNextPathVerts) {
+      numVerts = nextPathVerts.length / 3;
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(nextPathVerts), gl.DYNAMIC_DRAW); // add vertex data to the buffer
-      nextPathVerts = null;
+      nextPathVerts = [];
+      useNextPathVerts = false;
     }
 
     // set attributes
@@ -237,7 +242,7 @@ module gfx {
         .mul(M4.scale(Math.pow(2, scale / 5) / 100))
         .toArray()));
 
-    gl.drawArrays(gl.LINE_STRIP, 0, pathLen); // draw vertex data as a trangle strip of vertex length 4 and offset 0
+    gl.drawArrays(gl.LINES, 0, numVerts); // draw vertex data as a trangle strip of vertex length 4 and offset 0
 
 
     anim(draw, canvas);
@@ -254,8 +259,19 @@ module gfx {
     );
   }
 
-  export function setPath(points:V3[]):void {
-    nextPathVerts = _.chain(points).map((p:V3):number[] => p.toArray()).flatten().value();
+  export function addContiguousPath(points:V3[]):void {
+    var prevPt:V3 = null;
+    _.forEach(points, (pt:V3):void => {
+      if (prevPt) {
+        Array.prototype.push.apply(nextPathVerts, prevPt.toArray());
+        Array.prototype.push.apply(nextPathVerts, pt.toArray());
+      }
+      prevPt = pt;
+    });
+  }
+
+  export function updatePath():void {
+    useNextPathVerts = true;
   }
 
   export function getCanvas():HTMLCanvasElement {

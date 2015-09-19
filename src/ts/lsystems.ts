@@ -13,10 +13,10 @@ $(():void => {
     var $rules:JQuery = $('#rulesList');
 
     var lsystem:lsystems.LSystem = new lsystems.LSystem();
-    lsystem.addRule('X', 'X+YF+');
-    lsystem.addRule('Y', '-FX-Y');
+    lsystem.addRule('F', 'F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF');
+    lsystem.addRule('f', 'ffffff');
 
-    var lstrings:string[] = ['FX'];
+    var lstrings:string[] = ['F+F+F+F'];
     var strIndex:number = 0;
 
     function writeRulesTable():void {
@@ -137,11 +137,22 @@ $(():void => {
       var dir:gfx.V3 = new gfx.V3(0, 0, 0);
       var pts:gfx.V3[] = [pos];
       var turnAngle:number = Math.PI / 2;
+
+      function movePt():void {
+        pts.push(pos = pos.add(new gfx.V3(Math.cos(dir.z), Math.sin(dir.z), 0)));
+      }
+
       for (var i:number = 0; i < str.length; i++) {
         switch (str[i]) {
-          // TODO: need to be able to handle 'f', means that the path is not contiguous, will have to change rendering
+          case 'f':
+            if (pts.length) {
+              gfx.addContiguousPath(pts);
+            }
+            pts = [];
+            movePt();
+            break;
           case 'F':
-            pts.push(pos = pos.add(new gfx.V3(Math.cos(dir.z), Math.sin(dir.z), 0)));
+            movePt();
             break;
           case '+':
             dir.z += turnAngle;
@@ -153,7 +164,10 @@ $(():void => {
             break;
         }
       }
-      gfx.setPath(pts);
+      if (pts.length) {
+        gfx.addContiguousPath(pts);
+      }
+      gfx.updatePath();
     }
 
     drawString(lstrings[strIndex]);
