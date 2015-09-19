@@ -1,6 +1,8 @@
 //-
     Created by Daniel Beckwith on 9/6/15.
 
+include mixins
+
 doctype
 html
     head
@@ -15,9 +17,15 @@ html
         .container
             h1.title L-Systems
             canvas#canvas(width="640" height="480")
-            h5 Current string:
+            h5
+                | Current string:&nbsp;
+                div.btn-group
+                    button.btn.btn-default.btn-sm#prevStringButton(type="button") #[+glyphicon("chevron-left")] Prev
+                    button.btn.btn-default.btn-sm#nextStringButton(type="button") Next #[+glyphicon("chevron-right")]
             #currString
-            h5 Rules: #[button.btn.btn-default.btn-sm#editRulesButton(type="button") Edit]
+            h5
+                | Rules:&nbsp;
+                button.btn.btn-default.btn-sm#editRulesButton(type="button") Edit
             ul.list-unstyled#rulesList
             .modal.fade#editRulesModal(tabindex="-1")
                 .modal-dialog

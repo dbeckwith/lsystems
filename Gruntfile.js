@@ -81,6 +81,12 @@ module.exports = function (grunt) {
             cwd: 'src/res',
             src: ['**/*'],
             dest: 'bin/res'
+          },
+          {
+            expand: true,
+            cwd: 'node_modules/bootstrap-less',
+            src: ['fonts/**/*'],
+            dest: 'bin'
           }
         ]
       }
